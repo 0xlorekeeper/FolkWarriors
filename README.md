@@ -92,10 +92,36 @@ There are optional environment variables, most of which have sensible defaults i
 - `anchor deploy` - deploy the Solana programs for testing
 
 ## Errors
-- If you run into any errors during the build process, you may need to reset your Solana CLI configuration or re-airdrop SOL tokens.
-- Check the Anchor.toml file for any misconfigurations in program IDs.
-- Delete build artifacts if needed:
+- **Browserslist Update:** If prompted, update the Browserslist database:
+   ```bash
+   npx browserslist@latest --update-db
+   ```
+- **Lint Parsing Error:**
+  - Exclude `server.js` by adding it to `.eslintignore`:
+    ```
+    server.js
+    ```
+  - Alternatively, update `.eslintrc.js` to ignore specific rules for `server.js`:
+    ```json
+    "overrides": [
+      {
+        "files": ["server.js"],
+        "rules": {
+          "@typescript-eslint/no-var-requires": "off"
+        }
+      }
+    ]
+    ```
+- **Rebuild Dependencies:**
+   ```bash
+   rm -rf node_modules package-lock.json
+   npm install
+   ```
+- **Reset Build Artifacts:**
    ```bash
    rm -rf target
    ```
-
+- **Retry Pipeline:** Re-run tests after applying fixes:
+   ```bash
+   npm run lint
+   ```
