@@ -1,5 +1,9 @@
 # FolkWarriors
 
+## Warning
+
+This code is open, but not open source. It is not licensed, which means you cannot use it freely for your own applications. You cannot "base your code on FolkWarriors," nor use our code for anything. At all. This is not permissible under our license terms (which do not exist).
+
 ## Currency Setup (Solana)
 
 1. Install the [Solana CLI](https://docs.solana.com/cli/install-solana-cli).
@@ -102,18 +106,23 @@ There are optional environment variables, most of which have sensible defaults i
     server.js
     ```
   - Alternatively, update `.eslintrc.js` to ignore specific rules for `server.js`:
-    ```json
-    "overrides": [
-      {
-        "files": ["server.js"],
-        "parserOptions": {
-          "project": null
+    ```javascript
+    module.exports = {
+      parserOptions: {
+        project: './tsconfig.json',
+      },
+      overrides: [
+        {
+          files: ['server.js'],
+          parserOptions: {
+            project: null
+          },
+          rules: {
+            '@typescript-eslint/no-var-requires': 'off'
+          },
         },
-        "rules": {
-          "@typescript-eslint/no-var-requires": "off"
-        }
-      }
-    ]
+      ],
+    };
     ```
 - **Rebuild Dependencies:**
    ```bash
@@ -128,3 +137,43 @@ There are optional environment variables, most of which have sensible defaults i
    ```bash
    npm run lint
    ```
+
+## Tests
+- To run tests locally:
+   ```bash
+   npm run test:local
+   ```
+   > NOTE: This uses fixtures, not migrations. Keep fixtures updated in `/test/helpers/prepareContracts.js`.
+
+## Config
+- All network config is in `app-config.json`
+- Setup:
+   ```bash
+   cd frontend
+   npm run setup-app-config
+   ```
+- Add networks in `app-config.json` and update the `currentTokenPrice` getter.
+
+## Alternative Development Flow with Hardhat
+
+1. Start Hardhat node:
+   ```bash
+   npx hardhat node
+   ```
+2. Compile Hardhat artifacts:
+   ```bash
+   npx hardhat compile
+   ```
+3. Deploy to Hardhat node:
+   ```bash
+   export ETH_DEV_RPC_PORT=8545 && npm run deploy --reset
+   ```
+4. Start frontend with Hardhat:
+   ```bash
+   export VUE_APP_NETWORK_ID=31337 && npm run start:frontend
+   ```
+
+## i18n (Internationalization)
+- We use `vue-i18n` for translations. Default language is English.
+- To add languages, copy `en.json` in `frontend/src/locales` and rename to the desired ISO code.
+- Use `i18n-manager` for easier translations.
