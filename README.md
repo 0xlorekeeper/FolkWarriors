@@ -106,6 +106,9 @@ There are optional environment variables, most of which have sensible defaults i
     "overrides": [
       {
         "files": ["server.js"],
+        "parserOptions": {
+          "project": null
+        },
         "rules": {
           "@typescript-eslint/no-var-requires": "off"
         }
