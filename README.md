@@ -1,31 +1,69 @@
-# CryptoBlades
+# FolkWarriors
 
-## Currency Setup
+## Currency Setup (Solana)
 
-1. Install [Ganache](https://www.trufflesuite.com/ganache).
-1. For Ganache, choose Quickstart Ethereum.
-1. Increase the gas limit in the workspace to `99999999` (or some other high number so you can deploy).
-1. Install [MetaMask](https://metamask.io/).
-1. Create a new connection to connect to Ganache with these settings: http://localhost:7545, any name, any chain id
-1. In Ganache, click the key icon on the right side of any address and grab the private key.
-1. In MetaMask, create a new account, import from private key, and paste the key in there. 
+1. Install the [Solana CLI](https://docs.solana.com/cli/install-solana-cli).
+   ```bash
+   sh -c "$(curl -sSfL https://release.solana.com/stable/install)"
+   ```
+2. Confirm Solana is installed:
+   ```bash
+   solana --version
+   ```
+3. Configure Solana CLI to use the devnet (test environment):
+   ```bash
+   solana config set --url https://api.devnet.solana.com
+   ```
+4. Generate a new Solana wallet:
+   ```bash
+   solana-keygen new
+   ```
+5. A keypair file (`id.json`) will be created. Save it securely.
+6. Airdrop some SOL tokens to your devnet wallet:
+   ```bash
+   solana airdrop 2
+   ```
+   *(This gives you 2 SOL tokens for testing)*
 
-You should now have 100 fake eth! You're now fake rich.
+You should now have fake SOL tokens for development and testing!
 
 ## Frontend Setup
 
 1. `npm install`
-1. `mv .env.local .env` (copy the example env to your local so it can be used)
-1. `npm run contract:prepare` (this builds your contracts)
-1. `npm run contract:deploy` (this deploys your contracts to your local blockchain)
-1. `npm run start:frontend`
+2. Copy the example environment file:
+   ```bash
+   cp .env.local .env
+   ```
+3. Build your smart contracts using Anchor:
+   ```bash
+   anchor build
+   ```
+4. Deploy the contracts to Solana devnet:
+   ```bash
+   anchor deploy
+   ```
+5. Start the frontend development server:
+   ```bash
+   npm run start:frontend
+   ```
 
 For Windows developers experiencing errors follow these steps:
-1. `rm -r build`
-1. `npm run contract:prepare` (this builds your contracts)
-1. `rm -r build/contracts`
-1. `npm run contract:deploy`
-1. `npm run start:frontend`
+1. Delete build artifacts:
+   ```bash
+   rm -rf target
+   ```
+2. Rebuild the contracts:
+   ```bash
+   anchor build
+   ```
+3. Redeploy contracts:
+   ```bash
+   anchor deploy
+   ```
+4. Restart the frontend:
+   ```bash
+   npm run start:frontend
+   ```
 
 ### VSCode Setup
 
@@ -36,10 +74,12 @@ If you're using VSCode, we recommend these extensions: Auto Rename Tag, EditorCo
 There are optional environment variables, most of which have sensible defaults if copied from `.env.local`:
 
 - `VUE_APP_API_URL` - the API URL to use - defaults to prod (which will throw CORS errors on local)
+- `ANCHOR_PROVIDER_URL` - the Solana RPC endpoint URL
+- `ANCHOR_WALLET` - the path to your Solana wallet keypair file
 
 ## Structure
 
-- `contracts` contains the solidity contracts for the game
+- `programs` contains the Solana smart contracts using Anchor framework
 - `frontend` contains the Vue code for the frontend
 - `migrations` contains migration files
 - `test` contains tests
@@ -48,10 +88,14 @@ There are optional environment variables, most of which have sensible defaults i
 
 - `npm run start:frontend` - start up a server for the Vue frontend
 - `npm run lint` - run lint checking for all modules
-- `npm run contract:prepare` - extract the ABI and re-compile Truffle contracts
-- `npm run contract:deploy` - deploy the Truffle contracts for testing
+- `anchor build` - compile the Anchor-based Solana programs
+- `anchor deploy` - deploy the Solana programs for testing
 
 ## Errors
-- If you run into any error at all during the build process you may need to reset [Ganache](https://www.trufflesuite.com/ganache) by deleting previous workspaces and going through the Ganache setup process again including importing a new account for Metamask.
-- Artifacts are from different compiler runs `- rm -rf build/`
+- If you run into any errors during the build process, you may need to reset your Solana CLI configuration or re-airdrop SOL tokens.
+- Check the Anchor.toml file for any misconfigurations in program IDs.
+- Delete build artifacts if needed:
+   ```bash
+   rm -rf target
+   ```
 
